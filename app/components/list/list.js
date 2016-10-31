@@ -11,7 +11,7 @@ export default  class List extends React.Component{
             quelist:[],
             loading:true,
             loadingMore:false,
-            mounted :true
+            mounted :false
         }
     }
     scrollUpdate(){
@@ -25,7 +25,9 @@ export default  class List extends React.Component{
                 loadingMore:false,
                 loading:true
             });
-/*
+
+
+            /*
             $.ajax({
                 url: 'http://127.0.0.1:8080',
                 type: 'GET',
@@ -47,28 +49,46 @@ export default  class List extends React.Component{
                 }.bind(_this)
             })
 
+                 fetch("http://127.0.0.1:8080").then(function(listData) {
+                 return listData.json().then(function (json) {
+                 if (_this.state.mounted && json) {
+                 var quelists = _this.state.quelist.concat(json);
+                 var $page = _this.state.page + 1;
+                 _this.setState({
+                 quelist:quelists,
+                 loading:false,
+                 page:$page,
+                 loadingMore:true
+                 })
+                 }
+
+                 })
+                 });
             */
-            fetch("http://127.0.0.1:8080").then(function(listData) {
-                return listData.json().then(function (json) {
-                    if (_this.state.mounted && json) {
-                        var quelists = _this.state.quelist.concat(json);
-                        var $page = _this.state.page + 1;
-                        _this.setState({
+
+
+            fetch('http://127.0.0.1:8080')
+                .then(listData => listData.json())
+                .then((json)=>{
+                    if (this.state.mounted && json) {
+                        var quelists = this.state.quelist.concat(json);
+                        var $page = this.state.page + 1;
+                        this.setState({
                             quelist:quelists,
                             loading:false,
                             page:$page,
                             loadingMore:true
                         })
                     }
-
                 })
-            });
 
         }
 
     }
     componentDidMount(){
-        this.state.mounted = true;
+        this.setState({
+            mounted : true
+        });
         var _this=this;
         /*
         $.ajax({
@@ -91,30 +111,44 @@ export default  class List extends React.Component{
 
         });
 
+
+
+         fetch("http://127.0.0.1:8080").then(function(listData) {
+         return listData.json().then(function (json) {
+         if (_this.state.mounted) {
+         _this.setState({
+         quelist:json,
+         page:(_this.state.page + 1),
+         loading:false,
+         loadingMore:true
+         })
+         }
+
+         })
+         });
+
+
         */
 
 
-        fetch("http://127.0.0.1:8080").then(function(listData) {
-            return listData.json().then(function (json) {
-                if (_this.state.mounted) {
-                    _this.setState({
+        fetch("http://127.0.0.1:8080")
+            .then(listData => listData.json())
+            .then((json) =>{
+                if (this.state.mounted) {
+                    this.setState({
                         quelist:json,
                         page:(_this.state.page + 1),
                         loading:false,
                         loadingMore:true
                     })
                 }
-
-            })
-        });
+            });
         window.addEventListener('scroll',()=>{this.scrollUpdate()});
     }
     componenetUnmount(){
-        this.state.mounted = true;
         window.removeEventListener('scroll',()=>{this.scrollUpdate()});
     }
     routerWillLeave(){
-        this.state.mounted = true;
         window.removeEventListener('scroll',()=>{this.scrollUpdate()});
     }
    render(){

@@ -13,11 +13,13 @@ export default class Tag extends React.Component{
             loading:true,
             tag:"",
             loadingMore:false,
-            mounted:true
+            mounted:false
         }
     }
     componentDidMount(){
-        this.state.mounted = true;
+        this.setState({
+            mounted:true
+        });
         var page=this.state.page;
         var tag=this.props.params.id;
         this.updateState(page,tag);
@@ -25,7 +27,6 @@ export default class Tag extends React.Component{
     }
 
     componentDidUpdate(prevProps){
-        this.state.mounted = true;
         var tag=this.props.params.id;
         var oldTag=prevProps.params.id;
         var firstPage=1;
@@ -41,7 +42,6 @@ export default class Tag extends React.Component{
         }
     }
     componentWillUnmount(){
-        this.state.mounted = false;
         window.removeEventListener('scroll', ()=>{this.tagScrollUpdate()});
     }
     updateState(page,tag){
@@ -66,13 +66,35 @@ export default class Tag extends React.Component{
                 }
             }.bind(this)
         })
-        */
-        var _this=this;
-        fetch("http://127.0.0.1:8080/tag").then(function(listData) {
-            return listData.json().then(function (json) {
-                if(_this.state.mounted && json){
-                    var $page=_this.state.page+1;
-                    _this.setState({
+
+
+         var _this=this;
+         fetch("http://127.0.0.1:8080/tag").then(function(listData) {
+         return listData.json().then(function (json) {
+         if(_this.state.mounted && json){
+         var $page=_this.state.page+1;
+         _this.setState({
+         quelist:json,
+         loading:false,
+         page:$page,
+         tag:tag,
+         loadingMore:true
+         })
+         }
+
+         })
+         });
+
+         */
+
+
+
+        fetch("http://127.0.0.1:8080/tag")
+            .then(listData => listData.json())
+            .then((json) =>{
+                if(this.state.mounted && json){
+                    var $page=this.state.page+1;
+                    this.setState({
                         quelist:json,
                         loading:false,
                         page:$page,
@@ -80,9 +102,7 @@ export default class Tag extends React.Component{
                         loadingMore:true
                     })
                 }
-
-            })
-        });
+         });
     }
     tagScrollUpdate(){
         var scrollTop=$(window).scrollTop();
@@ -116,24 +136,43 @@ export default class Tag extends React.Component{
                     }
                 }.bind(this)
             })
-            */
 
-            var _this=this;
-            fetch("http://127.0.0.1:8080/tag").then(function(listData) {
-                return listData.json().then(function (json) {
-                    if(_this.state.mounted && json){
-                        var quelist=_this.state.quelist.concat(json);
-                        var $page=_this.state.page+1;
-                        _this.setState({
+
+             var _this=this;
+             fetch("http://127.0.0.1:8080/tag").then(function(listData) {
+             return listData.json().then(function (json) {
+             if(_this.state.mounted && json){
+             var quelist=_this.state.quelist.concat(json);
+             var $page=_this.state.page+1;
+             _this.setState({
+             quelist:quelist,
+             loading:false,
+             page:$page,
+             loadingMore:true
+             })
+             }
+
+             })
+             });
+
+             */
+
+
+
+            fetch("http://127.0.0.1:8080/tag")
+                .then(listData => listData.json())
+                .then((json) =>{
+                    if(this.state.mounted && json){
+                        var quelist=this.state.quelist.concat(json);
+                        var $page=this.state.page+1;
+                        this.setState({
                             quelist:quelist,
                             loading:false,
                             page:$page,
                             loadingMore:true
                         })
                     }
-
-                })
-            });
+                });
         }
     }
     render(){

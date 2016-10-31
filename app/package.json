@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"webpack-dev-server --hot",
-    "build":"webpack && webpack-dev-server --hot"
+    "start": "webpack-dev-server --hot",
+    "build": "webpack && webpack-dev-server --hot"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +23,7 @@
     "babel-preset-react": "^6.16.0",
     "css-loader": "^0.25.0",
     "node-sass-loader": "^0.1.7",
+    "querystring": "^0.2.0",
     "sass-loader": "^4.0.2",
     "style-loader": "^0.13.1",
     "webpack": "^1.13.2",
